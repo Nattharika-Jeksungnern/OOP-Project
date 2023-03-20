@@ -1,6 +1,6 @@
 class System :
     def __init__(self, system) :
-        self._sytem = system #temp variable
+        self._system = system #temp variable
 
     def sort_ranking():
         pass
