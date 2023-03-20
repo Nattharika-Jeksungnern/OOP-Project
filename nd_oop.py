@@ -1,9 +1,21 @@
+class System :
+    def __init__(self, system) :
+        self._sytem = system #temp variable
+
+    def sort_ranking():
+        pass
+    def create_board_room(num_player):
+        pass
+    def join_board_room(boardroom):
+        pass
+    def view_ranking():
+        pass
 class Person :
-    def __init__(self) :
-        self.__name = "guy"
-        self._color_name = "rainbow"
-        self._account = Account
-        self.__status = "offline"
+    def __init__(self, name, color, account, status) :
+        self.__name = name #"guy"
+        self._color_name = color #"rainbow"
+        self._account = account
+        self.__status = status #"offline"
 
     def log_in(self):
         pass
@@ -11,24 +23,59 @@ class Person :
     def sign_up(self):
         pass
 
-class User :
-    def __init__(self) :
-        elo_player = 99999
-        static = Statistic
+class User(Person) :
+    def __init__(self, name, color, account, status, elo, step, member_type, member_since, all_game_2p, win_game_2p, all_game_3p, win_game_3p, all_game_4p, win_game_4p) :
+        Person.__init__(self, name, color, account, status)
+        self._elo_player = elo
+        self._profile_step = step
+        self._profile_member_type = member_type
+        self._profile_member_since = member_since
+        self.__stats_all_game_2p = all_game_2p
+        self.__stats_win_game_2p = win_game_2p
+        self.__stats_all_game_3p = all_game_3p
+        self.__stats_win_game_3p = win_game_3p
+        self.__stats_all_game_4p = all_game_4p
+        self.__stats_win_game_4p = win_game_4p
 
     def check_step(self) :
         pass
-
     def create_board_room(self) :
         pass
-
     def join_board_room(self) :
         pass
-
     def create_forum(self) :
         pass
-
     def comment_forum(self) :
+        pass
+    def view_game_page():
+        pass
+    def ready_play(user):
+        pass
+    def create_reply(owner):
+        pass
+    def report_user(person):
+        pass
+    def view_ranking():
+        pass
+    def view_player_profile(person):
+        pass
+    def view_player_static(peraon):
+        pass
+    def delete_forum(topic):
+        pass
+    def delete_comment(comment):
+        pass
+    def like_forum(forum):
+        pass
+    def ike_comment(comment):
+        pass
+    def view_forum():
+        pass
+    def view_comment(owner,describe):
+        pass
+    def view_reply(onwer,describe):
+        pass
+    def view_forum_page():
         pass
 
 class Account :
@@ -44,45 +91,42 @@ class Account :
 class Admin (Account): 
     def __init__(self, email, password, forgot_password, role) :
         Account.__init__(self, email, password, forgot_password)        
-        self._role = role #"addmin"   
+        self._role = role #"admin"   
 
-class Profile :
-    def __init__(self) :
-        self._step_player = "super ultra hyper very nice great number one king granmaster"
-        self._member_type = "god"
-        self._member_since = "tomorrow"
-        self._status_person = "death"
-
-class Statistic :
-    def __init__(self) :
-        self.__all_game_2p = 999
-        self.__win_game_2p = 999
-        self.__all_game_3p = 999
-        self.__win_game_3p = 999
-        self.__all_game_4p = 999
-        self.__win_game_4p = 999
-
-    def plus(self) :
+    def ban_user():
         pass
-
-    def plot_graph(self) :
+    def view_forum_page():
         pass
-
-    def cal_win_rate_2p(self) :
+    def view_forum():
         pass
-
-    def cal_win_rate_3p(self) :
+    def create_forum(owner):
         pass
-
-    def cal_win_rate_4p(self) :
+    def delete_forum(topic):
+        pass
+    def create_reply(owner):
+        pass
+    def delete_comment(comment):
+        pass
+    def view_ranking():
+        pass
+    def view_player_profile(person):
+        pass
+    def view_player_static(person):
+        pass
+    def view_game_page():
         pass
 
 #player inherit Person
 class Player(User) :
-    def __init__(self) :
-        self._time_player = 600
-        self._score_player = 0
-        self.hand = """Hand"""
+    def __init__(self, name, color, account, status, elo, static, time, score, card, hold_card, coins, gold_coin, noble) :
+        User.__init__(self, name, color, account, status, elo, static)
+        self._time_player = time
+        self._score_player = score
+        self._card = card
+        self._hold_card = hold_card
+        self._coins = coins
+        self._gold_coin = gold_coin
+        self._noble =  noble
 
     def winner(self) :
         pass
@@ -98,76 +142,65 @@ class Player(User) :
 
     def return_coin(self) :
         pass
-
-class Hand :
-    def __init__(self) :
-        card = Card
-        hold_card = Card
-        coin = Coin
-        gold_coin = GoldCoin
-        noble = Noble
+    def resign_game(person):
+        pass
+    def back_game(person):
+        pass
 
 class FullDeck :
-    def __init__(self) :
-        self._card_collection = []
-        self._num_card = 20+30+40
+    def __init__(self, card, number) :
+        self._card_collection = card #Aggragation with Card
+        self._num_card = number
 
     def shuffle(self) :
         pass
 
 class Card :
-    def __init__(self) :
-        self.__name_card = "W311"
-        self._cost_card = [3,1,0,0,1]
-        self._point_card = 0
-        self._status_card = "in_deck"
+    def __init__(self, name, cost, point, status) :
+        self.__name_card = name #"W311"
+        self._cost_card = cost #[3,1,0,0,1]
+        self._point_card = point #0
+        self._status_card = status #"in_deck"
 
-# Deck1 inherit Full Deck
-class Deck1 (FullDeck):
-    def __init__(self,card) :
-        self.__tier = 1
-        self._top_deck = card
+    def update_owner(player):
+        pass
     
-    def random_top_deck(self):
-        pass
-        
-# Deck2 inherit Full Deck
-class Deck2 (FullDeck):
-    def __init__(self,card) :
-        self.__tier = 2
-        self._top_deck = card
-        
-    def random_top_deck(self):
-        pass
 
-# Deck3 inherit Full Deck
-class Deck3 (FullDeck):
-    def __init__(self,card) :
-        self.__tier = 3
-        self._top_deck = card
-
+class Deck (FullDeck):
+    def __init__(self,card, tier, number) :
+        FullDeck.__init__(self, card, number)
+        self.__tier = tier
+        self._top_deck = card #Deck call Card
+    
     def random_top_deck(self):
         pass
 
 class DeckNoble :
-    def __init__(self) :
-        self._noble_collection = []
-        self._num_noble = 3+1+1
+    def __init__(self, noble, number) :
+        self._noble_collection = noble #[] #Aggregation with Noble
+        self._num_noble = number #3+1+1
 
 class Noble :
-    def __init__(self) :
-        self.__name_noble = "Arm"
-        self.condition_noble : list
-        self.__status_noble = False
+    def __init__(self, name, condition, status, owner) :
+        self.__name_noble = name #"Arm"
+        self.condition_noble = condition #[]
+        self.__status_noble = status #False
+        self._owner = owner #"Premier" #Association with PLayer
+
+    def update_owner(player):
+        pass
 
 class StackCoin :
-    def __init__(self) :
-        self.__num_coin = [7,7,7,7]
+    def __init__(self, num_coin) :
+        self.__num_coin = num_coin # [7,7,7,7] #Aggregation with Coin
 
 class Coin :
-    def __init__(self) :
-        self._color = "white"
+    def __init__(self, color) :
+        self._color = color #"white"
         self.__value = 1
+
+    def update_owner(player):
+        pass
 
 class GoldCoin :
     def __init__(self) :
@@ -177,11 +210,19 @@ class GoldCoin :
         pass
 
 class BoardRoom :
-    def __init__(self) :
-        self.num_player = 2+1+1
-        self.time = 600
-        self.target = 15
-        self.status_room = "playing"
+    def __init__(self, number, time, target, status, result, deck1, deck2, deck3, player, noble, coin, gold_coin) :
+        self._num_player = number #2+1+1
+        self._time = time #600
+        self._target = target #15
+        self._status_room = status #"playing"
+        self._result = result #""
+        self._deck_1 = deck1 #[]
+        self._deck_2 = deck2 #[]
+        self._deck_3 = deck3 #[]
+        self._player = player #[]
+        self._noble = noble #[]
+        self._coin = coin #[]
+        self._gold_coin = gold_coin #[]
 
     def show(self) :
         pass
@@ -193,39 +234,55 @@ class BoardRoom :
         pass
 
 class GamePage :
-    def __init__(self) :
-        self._list_room = []
-        self._create_room = 0
+    def __init__(self, room, create) :
+        self._list_room = room #[] #Keep BoardRoom
+        self._create_room = create #0
+
+    #function  เข้า forumpage
 
 class ForumPage :
     def __init__(self) :
         self._list_forum = []
         self._create_forum = True
+    
+    #function  เข้า forumpage
 
-class CreateForum :
-    def __init__(self) :
-        self._title_forum = "Rule"
-        self._content_forum = "ba ba ba ba ba bana na"
-        self._likes_forum = 999
-        self._dislike_forum = -999
-        self._date_forum = [10,2,2023]
-        self._confirm_forum = True
-        self._cancel_forum = False
-        self._owner_forum = "ngerrrrrrrrrrrrr"
+class Forum :
+    def __init__(self, title, content, num_like, num_dislike, date, confirm, cancel, owner, comment) :
+        self._title_forum = title #"Rule"
+        self._content_forum = content #"ba ba ba ba ba bana na"
+        self._likes_forum = num_like #999
+        self._dislike_forum = num_dislike #-999
+        self.__date_forum = date #[10,2,2023]
+        self._confirm_forum = confirm #True
+        self._cancel_forum = cancel #False
+        self._owner_forum = owner #"ngerrrrrrrrrrrrr" #Association with User
+        self._comment = comment #[] #Aggregation with Class Comment
+
+    def create_forum(describe):
+        pass
+    def create_comment(describe):
+        pass
 
 class Comment :
-    def __init__(self) :
-        self._content_comment = "comment"
-        self._date_comment = [10,2,2023]
-        self._confirm_comment = True
-        self._cancel_comment = False
-        self._owner_comment = "ngerrrrrrrrrrrrrr"
+    def __init__(self,content, date, confirm, cancel, owner, reply, num_like) :
+        self._content_comment = content #"comment"
+        self.__date_comment = date #[10,2,2023]
+        self._confirm_comment = confirm #True
+        self._cancel_comment = cancel #False
+        self._owner_comment = owner #"ngerrrrrrrrrrrrrr" #Association with User
+        self.__like_comment = num_like
+        self._reply = reply #[] #Aggregation with Class Reply
+    
+    def create_reply(describe):
+        pass
 
-class Reply :
-    def __init__(self) :
-        self._content_reply = "reply"
-        self._date_reply = [10,2,2023]
-        self._confirm_reply = True
-        self._cancel_reply = False
-        self._ower_reply = "??"
-        self._host_reply = "??"
+class Reply : #Reply 1 level 
+    def __init__(self, content, date, confirm, cancel, owner, host) :
+        self._content_reply = content#"reply"
+        self.__date_reply = date #[10,2,2023]
+        self._confirm_reply = confirm #True
+        self._cancel_reply = cancel #False
+        self._owner_reply = owner #"" #user reply ใคร reply
+        self._host_comment = host #"" #user reply comment ของใคร
+
