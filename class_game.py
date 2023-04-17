@@ -1,4 +1,5 @@
 import random
+import math
 class FullDeck :
     def __init__(self, card, number) :
         self._card_collection = card #Aggragation with Card
@@ -18,8 +19,6 @@ class FullDeck :
         for card in self._card_collection:
             if card._tier == 3:
                 deck.append(card)
-
-
 
 class Card :
     def __init__(self, name, cost, point, tier, value) :
@@ -42,8 +41,7 @@ class Card :
         print(self._tier)
         print('value :',end='')
         print(self._value)
-        
-        print('-+-+-+-+-+-+-+')
+        print('-+-+-+-+-+-+-+-+-+-+-+-+-+-+')
 class Deck (FullDeck):
     def __init__(self,card, tier, number) :
         FullDeck.__init__(self, card, number)
@@ -53,6 +51,7 @@ class Deck (FullDeck):
     def print_top_deck(self):
         for card in self._top_deck:
             card.print_card()
+
     def shuffle_deck(self):
         for i in range(5):
             random.shuffle(self._card_collection)
@@ -87,6 +86,7 @@ class StackCoin :
 
     def pick_coin(self, choose_coin) :
         coin = []
+
         if len(choose_coin) == 2:
             if choose_coin[0] != choose_coin[1]:
                 print("Can't pick coin, please pick 1 pair or 3 differrent")
@@ -100,6 +100,10 @@ class StackCoin :
             if choose_coin[0] == choose_coin[1] or choose_coin[1] == choose_coin[2] or choose_coin[0] == choose_coin[2]:
                 print("Can't pick like this. Please choose 3 different or 1 pair.")
                 return False
+            for temp in self._coins:
+                if len(temp) - 1 == 0:
+                    print("0 coin, can't pick.")
+                    return False
         else :
             print("Can't pick like this. Please choose 3 different or 1 pair.")
             return False
@@ -110,13 +114,10 @@ class StackCoin :
                     if len(list_coin) - 1 > 0:
                         coin.append(list_coin[0])
                         list_coin.remove(list_coin[0])
-                    else :
+                    """  else :
                         print("0 coin, can't pick.")
-                        return False
-                        
-
+                        return False """
         #print check                  
-        
         return coin
     
     def check_coin(self):
@@ -128,16 +129,11 @@ class StackCoin :
             print(g) 
         print('*******************')
 
-    def return_coin(self, coin, player):
-        for p_coin in player._coins :
-            if p_coin._color == coin:
-                self._coins.append(p_coin)
-                player._coins.remove(p_coin)
-
-    """ def update_coins(self, coin):
-        for i in range(len(color_coin)):
-            if coin == color_coin[i]:
-                self._coins[i].append(coin) """
+    def update_coins(self, coin):
+        for temp in coin:
+            for list_coin in self._coins:
+                if temp._color == list_coin[0]._color:
+                    list_coin.append(temp)
    
         
 class Coin :
@@ -149,6 +145,17 @@ class Coin :
 class GoldCoin :
     def __init__(self) :
         self._coins = ["Gold", "Gold", "Gold", "Gold", "Gold"]
+    
+    def pay_gold_coin(self):
+        coin = self._coins[0]
+        self._coins.remove(coin)
+        return coin
+    
+    def update_gold_coin(self, coin):
+        self._coins.append(coin)
+
+    def print_gold_coin(self):
+        print(self._coins)
 
 
 
@@ -166,20 +173,21 @@ class BoardRoom :
         self._coin = coin #[]
         self._gold_coin = gold_coin #[]
         self._flag = 0
+        self._last_turn = False
 
     def show_card(self):
         print("tier 3")
         for card in self._deck_3:
             card.print_card()
-        print("-"*20)
+        print("-"*40)
         print("tier 2")
         for card in self._deck_2:
             card.print_card()
-        print("-"*20)
+        print("-"*40)
         print("tier 1")
         for card in self._deck_1:
             card.print_card()
-        print("-"*20)
+        print("-"*40)
         
     def add_player(self, player):
         self._player.append(player)
@@ -215,25 +223,97 @@ class BoardRoom :
                     current_deck=self._deck_3
                     search=False
                     continue
-
-        can_buy = True       
-        for i in range(5):
-            if len(player._coins[i]) < current_card._cost[i]:
+        can_buy = True
+        discount = player.discount_coin()
+        player_coin = 0
+        card_coin = 0
+        for i in range(5):     
+            if len(player._coins[i]) + discount[i] < current_card._cost[i]:
+                player_coin += len(player._coins[i]) + discount[i]
+                card_coin += current_card._cost[i]
                 can_buy = False
 
-        if can_buy:
-            print("--------------------------")
-            print(player._name)
-            player.update_score(current_card._point)
-            player._card.append(current_card)
-            current_deck.remove(current_card)         
+        if not can_buy:
+            if len(player._gold_coins) >= card_coin - player_coin:
+                can_buy = True
+                """ for i in range(card_coin - player_coin):
+                    self._gold_coin.update_gold_coin(player.pay_gold_coin()) """
 
-            for card in player._card :
-                card.print_card()
-            print('******************************')
-            for card in current_deck:
-                card.print_card()
+        if can_buy:
+            #update score
+            player.update_score(current_card._point)
+            #update card
+            player.update_card(current_card)
+            #remove card from deck
+            current_deck.remove(current_card)
+
+            #remove coin from player
+            for i in range(5):
+                print(1)
+                if current_card._cost[i] > 0:
+                    print("Mark")
+                    if current_card._cost[i] > len(player._coins[i]) + discount[i]:
+                        print("cost > coin")
+                        diff = current_card._cost[i] - len(player._coins[i]) - discount[i]
+                        self._coin.update_coins(player.pay_coin(i, len(player._coins[i])))
+                        for i in range(diff):
+                            self._gold_coin.update_gold_coin(player.pay_gold_coin())
+                    else :
+                        print("coin > cost")
+                        self._coin.update_coins(player.pay_coin(i, current_card._cost[i]))
             return current_card._tier
+        else:
+            print("Not enough coin, can't buy.")
+            return False
+
+    def buy_hold_card(self, player, card_name):
+        search = False
+        for card in player._hold_card:
+            if card._name == card_name:
+                current_card = card
+                search = True
+        if not search:
+            print("Don't have this card on your hand")
+            return False
+        can_buy = True       
+        discount = player.discount_coin()
+        player_coin = 0
+        card_coin = 0
+        for i in range(5):     
+            if len(player._coins[i]) + discount[i] < current_card._cost[i]:
+                player_coin += len(player._coins[i]) + discount[i]
+                card_coin += current_card._cost[i]
+                can_buy = False
+
+        if not can_buy:
+            if len(player._gold_coins) >= card_coin - player_coin:
+                can_buy = True
+                """ for i in range(card_coin - player_coin):
+                    self._gold_coin.update_gold_coin(player.pay_gold_coin()) """
+
+        if can_buy:
+            #update score
+            player.update_score(current_card._point)
+            #update card
+            player.update_card(current_card)
+            #remove card from deck
+            player._hold_card.remove(current_card)
+
+            #remove coin from player
+            for i in range(5):
+                print(1)
+                if current_card._cost[i] > 0:
+                    print("Mark")
+                    if current_card._cost[i] > len(player._coins[i]) + discount[i]:
+                        print("cost > coin")
+                        diff = current_card._cost[i] - len(player._coins[i]) - discount[i]
+                        self._coin.update_coins(player.pay_coin(i, len(player._coins[i])))
+                        for i in range(diff):
+                            self._gold_coin.update_gold_coin(player.pay_gold_coin())
+                    else :
+                        print("coin > cost")
+                        self._coin.update_coins(player.pay_coin(i, current_card._cost[i]))
+            return True
         else:
             print("Not enough coin, can't buy.")
             return False
@@ -245,6 +325,61 @@ class BoardRoom :
             self._deck_2 = deck
         elif tier == 3:
             self._deck_3 = deck
+
+    def hold_card(self, player, card_name):
+        search=True
+        while search:
+            for i in self._deck_1:
+                if card_name == i._name:
+                    current_card=i
+                    current_deck=self._deck_1
+                    search=False
+                    continue
+            for i in self._deck_2:
+                if card_name == i._name:
+                    current_card=i
+                    current_deck=self._deck_2
+                    search=False
+                    continue
+            for i in self._deck_3:
+                if card_name == i._name:
+                    current_card=i
+                    current_deck=self._deck_3
+                    search=False
+                    continue
+        #card เข้า player
+        player.add_hold_card(current_card)
+        current_deck.remove(current_card)
+        #gold coin เข้า player
+        if self._gold_coin._coins != []:
+            player.update_gold_coin(self._gold_coin.pay_gold_coin())
+        return current_card._tier
+
+    def return_coins(self, color, player):
+        if color == 'Gold':
+            self._gold_coin.update_gold_coin(player.pay_gold_coin())
+            return True
+        for i in range(5):
+            if color_coin[i] == color:
+                self._coin.update_coins(player.pay_coin(i, 1))
+        return False
+        
+    def get_last_turn(self, player):
+        if player._score_player == 15:
+            self._last_turn = True
+            return True
+        return False
+    def last_player(self, player):
+        if player._name == self._player[self._num_player - 1]._name and self._last_turn:
+            print("last player")
+
+    def win(self):
+        score = 0
+        for player in self._player:
+            if player._score_player > score:
+                winner = player._name
+                score = player._score_player
+        print(winner)
 
     def show(self) :
         pass
